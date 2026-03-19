@@ -22,7 +22,7 @@ U8X8_SSD1306_128X64_NONAME_HW_I2C u8x8(/* reset=*/ U8X8_PIN_NONE);
 
 
 void setup() {
-  u8x8.clear();
+  
   pinMode(ledPin, OUTPUT);
   pinMode(sensorpin, INPUT);
   pinMode(rotaryPin, INPUT);
@@ -32,6 +32,7 @@ void setup() {
 }
 
 void loop() {
+  u8x8.clear();
   u8x8.setFont(u8x8_font_chroma48medium8_r);
   u8x8.setCursor(0, 0);
   sensorValue = analogRead(sensorpin);
@@ -43,8 +44,11 @@ void loop() {
 
 
 
-  if (sensorValue < rotaryValue) {
-    analogWrite(ledPin, 255 - sensorValue);
+  if (sensorValue < rotaryValue && rotaryValue > 511) {
+    analogWrite(ledPin, 255 - (sensorValue / 4));
+    trueVal = true;
+  } else if (sensorValue < rotaryValue && rotaryValue < 512) {
+    analogWrite(ledPin, 255 - ((sensorValue / 4) * 2));
     trueVal = true;
   } else {
     analogWrite(ledPin, 0);
