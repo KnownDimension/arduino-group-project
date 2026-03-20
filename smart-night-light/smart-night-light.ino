@@ -12,7 +12,7 @@ bool trueVal = false;
 int buttonState = 0;
 int brightness = 0;
 int ledbright = 0;
-bool buttonLock = false;
+bool buttonLock = false; // getting all the variables
 
 
 #include <U8x8lib.h>
@@ -47,8 +47,11 @@ void loop() {
   if (sensorValue < rotaryValue && rotaryValue > 511) {
     analogWrite(ledPin, 255 - (sensorValue / 4));
     trueVal = true;
-  } else if (sensorValue < rotaryValue && rotaryValue < 512) {
+  } else if (sensorValue < rotaryValue && rotaryValue < 512 && rotaryValue > 255) {
     analogWrite(ledPin, 255 - ((sensorValue / 4) * 2));
+    trueVal = true;
+  } else if (sensorValue < rotaryValue && rotaryValue < 256) {
+    analogWrite(ledPin, 255 - (sensorValue / 4) * 4);
     trueVal = true;
   } else {
     analogWrite(ledPin, 0);
@@ -60,6 +63,9 @@ void loop() {
   u8x8.print(rotaryValue);
   u8x8.setCursor(0, 25);
   u8x8.print(trueVal);
+  u8x8.setCursor(0, 50);
+  u8x8.print("light level: ");
+  u8x8.print(sensorValue);
   u8x8.setFlipMode(1);
   delay(200);
 }
